@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel Assist | Distributed System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-building-columns"></i>
+                <span>Hostel Assist</span>
+            </div>
+            <ul class="nav-links">
+                <li class="active" onclick="showSection('dashboard')">
+                    <i class="fa-solid fa-chart-line"></i> Dashboard
+                </li>
+                <li onclick="showSection('notices')">
+                    <i class="fa-solid fa-bullhorn"></i> Notices (REST)
+                </li>
+                <li onclick="showSection('complaints')">
+                    <i class="fa-solid fa-screwdriver-wrench"></i> Complaints (Socket)
+                </li>
+                <li onclick="showSection('rooms')">
+                    <i class="fa-solid fa-bed"></i> Room Info (RMI)
+                </li>
+                <li onclick="showSection('resources')">
+                    <i class="fa-solid fa-network-wired"></i> P2P Share
+                </li>
+                <li onclick="showSection('mess')">
+                    <i class="fa-solid fa-utensils"></i> Mess Feedback (Shared Mem)
+                </li>
+            </ul>
+
+            <div class="system-status">
+                <h3>System Health</h3>
+                <div class="status-item">
+                    <span class="dot online"></span> REST API (8080)
+                </div>
+                <div class="status-item">
+                    <span class="dot online"></span> Socket Server (5000)
+                </div>
+                <div class="status-item">
+                    <span class="dot offline"></span> RMI Registry
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            
+            <header>
+                <h2><i class="fa-solid fa-bars" id="menu-toggle"></i> <span id="page-title">Dashboard Overview</span></h2>
+                <div class="user-profile">
+                    <span>Admin User</span>
+                    <img src="https://ui-avatars.com/api/?name=Admin+User&background=0D8ABC&color=fff" alt="User">
+                </div>
+            </header>
+
+            <section id="dashboard" class="content-section active">
+                <div class="stats-grid">
+                    <div class="card stat-card">
+                        <div class="stat-icon purple"><i class="fa-solid fa-users"></i></div>
+                        <div>
+                            <h3>120</h3>
+                            <p>Active Students</p>
+                        </div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-icon orange"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div>
+                            <h3>5</h3>
+                            <p>Pending Complaints</p>
+                        </div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-icon blue"><i class="fa-solid fa-file-arrow-down"></i></div>
+                        <div>
+                            <h3>12</h3>
+                            <p>Files Shared (P2P)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card recent-activity">
+                    <h3>Recent System Logs</h3>
+                    <ul class="log-list">
+                        <li><span class="time">10:02 AM</span> Server started on Port 8080</li>
+                        <li><span class="time">10:05 AM</span> RMI Registry bound to "RoomService"</li>
+                        <li><span class="time">10:10 AM</span> Peer-to-Peer node connected [192.168.1.5]</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="notices" class="content-section">
+                <div class="card">
+                    <h3><i class="fa-solid fa-bullhorn"></i> Digital Notice Board</h3>
+                    <p class="subtitle">Communication Model: <strong>Stateless REST API</strong></p>
+                    
+                    <div class="input-group">
+                        <input type="text" id="noticeInput" placeholder="Enter new announcement...">
+                        <button class="btn-primary" onclick="postNotice()">Post Notice</button>
+                    </div>
+
+                    <div id="notice-list-container">
+                        <!-- Javascript will populate this -->
+                        <div class="notice-item">
+                            <span class="notice-date">Just Now</span>
+                            <p>System Initialized via REST API.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="complaints" class="content-section">
+                <div class="card">
+                    <h3><i class="fa-solid fa-screwdriver-wrench"></i> Lodge Complaint</h3>
+                    <p class="subtitle">Communication Model: <strong>Socket Programming (TCP)</strong></p>
+
+                    <form onsubmit="submitComplaint(event)">
+                        <label>Room Number</label>
+                        <input type="text" placeholder="e.g. 101" required>
+                        
+                        <label>Issue Category</label>
+                        <select>
+                            <option>Electricity</option>
+                            <option>Plumbing</option>
+                            <option>Cleanliness</option>
+                        </select>
+                        
+                        <label>Description</label>
+                        <textarea rows="3" placeholder="Describe the issue..."></textarea>
+                        
+                        <button type="submit" class="btn-danger">Send via Socket</button>
+                    </form>
+                    <div id="socket-response" class="response-box" style="display:none;"></div>
+                </div>
+            </section>
+
+            <section id="rooms" class="content-section">
+                <div class="card">
+                    <h3><i class="fa-solid fa-bed"></i> Room Search</h3>
+                    <p class="subtitle">Communication Model: <strong>Java RMI (Remote Method Invocation)</strong></p>
+                    
+                    <div class="search-box">
+                        <input type="text" id="roomSearch" placeholder="Enter Room No (e.g. 101)">
+                        <button class="btn-secondary" onclick="fetchRoomInfo()">Invoke RMI</button>
+                    </div>
+
+                    <div id="rmi-result" class="info-display">
+                        <p class="placeholder-text">Result will appear here after RMI lookup...</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resources" class="content-section">
+                <div class="card">
+                    <h3><i class="fa-solid fa-network-wired"></i> Peer-to-Peer Resources</h3>
+                    <p class="subtitle">Communication Model: <strong>Decentralized P2P</strong></p>
+
+                    <div class="p2p-grid">
+                        <div class="peer-list">
+                            <h4>Active Peers</h4>
+                            <ul>
+                                <li><span class="dot online"></span> Peer A (This Node)</li>
+                                <li><span class="dot online"></span> Peer B (Port 6001)</li>
+                            </ul>
+                        </div>
+                        <div class="file-area">
+                            <h4>Available Files</h4>
+                            <div class="file-item">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span>Dist_Systems_Notes.pdf</span>
+                                <button class="btn-sm">Download</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="mess" class="content-section">
+                <div class="card">
+                    <h3><i class="fa-solid fa-utensils"></i> Live Mess Feedback</h3>
+                    <p class="subtitle">Communication Model: <strong>Shared Memory / IPC</strong></p>
+
+                    <div class="voting-area">
+                        <button class="vote-btn good" onclick="sendVote('good')">😋 Good</button>
+                        <button class="vote-btn avg" onclick="sendVote('avg')">😐 Average</button>
+                        <button class="vote-btn poor" onclick="sendVote('poor')">🤢 Poor</button>
+                    </div>
+
+                    <div class="results-bar">
+                        <div class="bar-segment green" style="width: 60%">60%</div>
+                        <div class="bar-segment yellow" style="width: 30%">30%</div>
+                        <div class="bar-segment red" style="width: 10%">10%</div>
+                    </div>
+                    <p style="text-align: center; margin-top: 10px; color: #666;">Data synchronized via MappedByteBuffer</p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

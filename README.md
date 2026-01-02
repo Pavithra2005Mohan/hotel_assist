@@ -6,16 +6,27 @@ Git Development Strategy: Hostel Assist
 To avoid "Merge Conflicts" (where two people edit the same file and Git gets confused), we will strictly follow this directory isolation rule. Only edit files inside your assigned folder.
 
 HostelAssist/
+
 ├── src/
+
 │   ├── main/
-│   │   ├── Main.java              <-- MASTER FILE (Managed by Member 1)
+
+│   │   ├── Main.java              <-- MASTER FILE 
+
 │   │   ├── modules/
+
 │   │   │   ├── noticeboard/       <-- Member 1 Area (REST)
+
 │   │   │   ├── complaints/        <-- Member 2 Area (Sockets)
+
 │   │   │   ├── p2p/               <-- Member 2 Area (P2P)
+
 │   │   │   ├── roominfo/          <-- Member 3 Area (RMI)
+
 │   │   │   └── mess/              <-- Member 3 Area (Shared Mem)
+
 │   └── web/                       <-- Member 1 Area (UI)
+
 
 
 2. Branching Strategy

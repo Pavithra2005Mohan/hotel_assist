@@ -15,17 +15,17 @@ HostelAssist/
 
 │   │   ├── modules/
 
-│   │   │   ├── noticeboard/       <-- Member 1 Area (REST)
+│   │   │   ├── noticeboard/       <--  (REST)
 
-│   │   │   ├── complaints/        <-- Member 2 Area (Sockets)
+│   │   │   ├── complaints/        <--  (Sockets)
 
-│   │   │   ├── p2p/               <-- Member 2 Area (P2P)
+│   │   │   ├── p2p/               <--  (P2P)
 
-│   │   │   ├── roominfo/          <-- Member 3 Area (RMI)
+│   │   │   ├── roominfo/          <-- (RMI)
 
-│   │   │   └── mess/              <-- Member 3 Area (Shared Mem)
+│   │   │   └── mess/              <-- (Shared Mem)
 
-│   └── web/                       <-- Member 1 Area (UI)
+│   └── web/                       <-- (UI)
 
 
 

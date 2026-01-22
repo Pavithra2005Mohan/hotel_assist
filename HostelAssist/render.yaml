@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: hostel-assist
+    env: java
+    buildCommand: javac -d bin -encoding UTF-8 -sourcepath src src/main/Main.java
+    startCommand: java -cp bin main.Main
+    envVars:
+      - key: PORT
+        value: 8080

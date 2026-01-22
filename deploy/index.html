@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel Assist | Distributed System</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>🏠 Hostel Assist</h2>
+            <p class="sidebar-subtitle">Distributed Systems Lab</p>
+        </div>
+        <div class="nav-menu">
+            <div class="nav-item active" onclick="show('notices')">
+                <span class="nav-icon">📢</span>
+                <div class="nav-content">
+                    <div class="nav-title">Notices</div>
+                    <div class="nav-desc">REST API</div>
+                </div>
+            </div>
+            <div class="nav-item" onclick="show('complaints')">
+                <span class="nav-icon">🔧</span>
+                <div class="nav-content">
+                    <div class="nav-title">Complaints</div>
+                    <div class="nav-desc">Socket Programming</div>
+                </div>
+            </div>
+            <div class="nav-item" onclick="show('rooms')">
+                <span class="nav-icon">🏠</span>
+                <div class="nav-content">
+                    <div class="nav-title">Room Info</div>
+                    <div class="nav-desc">Java RMI</div>
+                </div>
+            </div>
+            <div class="nav-item" onclick="show('mess')">
+                <span class="nav-icon">🥣</span>
+                <div class="nav-content">
+                    <div class="nav-title">Mess Feedback</div>
+                    <div class="nav-desc">Shared Memory</div>
+                </div>
+            </div>
+            <div class="nav-item" onclick="show('p2p')">
+                <span class="nav-icon">🔗</span>
+                <div class="nav-content">
+                    <div class="nav-title">P2P Sharing</div>
+                    <div class="nav-desc">Peer-to-Peer</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div id="status-indicator" class="status-badge" style="display:none">
+            <span class="status-icon">⚠️</span>
+            <span>Backend Offline - Running in Simulation Mode</span>
+        </div>
+
+        <!-- NOTICE BOARD -->
+        <div id="notices" class="card active">
+            <div class="card-header">
+                <div>
+                    <h3>📢 Digital Notice Board</h3>
+                    <span class="subtitle">REST API Communication (Port 8080)</span>
+                </div>
+            </div>
+            <div id="noticeList" class="notice-list">Loading notices...</div>
+            <div class="input-section">
+                <div class="form-group">
+                    <label>Notice Title</label>
+                    <input type="text" id="noticeTitle" placeholder="Enter notice title...">
+                </div>
+                <div class="form-group">
+                    <label>Notice Message</label>
+                    <textarea id="noticeMessage" rows="3" placeholder="Enter notice message..."></textarea>
+                </div>
+                <button class="btn btn-primary" onclick="postNotice()">
+                    <span>📝 Post Notice</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- COMPLAINTS -->
+        <div id="complaints" class="card">
+            <div class="card-header">
+                <div>
+                    <h3>🔧 Lodge Complaint</h3>
+                    <span class="subtitle">TCP Socket Communication (Port 5000)</span>
+                </div>
+            </div>
+            <div class="form-section">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Room Number</label>
+                        <input type="text" id="complaintRoom" placeholder="e.g. 101, 102, 201" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="complaintCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="Water">💧 Water</option>
+                            <option value="Electricity">⚡ Electricity</option>
+                            <option value="Cleanliness">🧹 Cleanliness</option>
+                            <option value="Other">📋 Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="complaintDesc" rows="4" placeholder="Describe the issue in detail..." required></textarea>
+                </div>
+                <button class="btn btn-secondary" onclick="submitComplaint()">
+                    <span>📤 Submit Complaint</span>
+                </button>
+                <div id="complaintStatus" class="status-message"></div>
+            </div>
+        </div>
+
+        <!-- ROOMS -->
+        <div id="rooms" class="card">
+            <div class="card-header">
+                <div>
+                    <h3>🏠 Room Information</h3>
+                    <span class="subtitle">Java RMI Registry (Port 1099)</span>
+                </div>
+            </div>
+            <div class="search-section">
+                <div class="form-group">
+                    <label>Enter Room Number</label>
+                    <div class="input-with-button">
+                        <input type="text" id="roomInput" placeholder="e.g. 101, 102, 201, 202, 301, 302">
+                        <button class="btn btn-primary btn-inline" onclick="searchRoom()">
+                            <span>🔍 Search</span>
+                        </button>
+                    </div>
+                </div>
+                <div id="rmiResult" class="result-box"></div>
+            </div>
+        </div>
+
+        <!-- MESS -->
+        <div id="mess" class="card">
+            <div class="card-header">
+                <div>
+                    <h3>🥣 Mess Feedback</h3>
+                    <span class="subtitle">Shared Memory / IPC (Port 8081)</span>
+                </div>
+            </div>
+            <div class="vote-section">
+                <p class="vote-instruction">Rate today's mess quality:</p>
+                <div class="vote-group">
+                    <button class="vote-btn vote-good" onclick="vote('good')">
+                        <span class="vote-emoji">😋</span>
+                        <span class="vote-label">Good</span>
+                    </button>
+                    <button class="vote-btn vote-average" onclick="vote('average')">
+                        <span class="vote-emoji">😐</span>
+                        <span class="vote-label">Average</span>
+                    </button>
+                    <button class="vote-btn vote-poor" onclick="vote('poor')">
+                        <span class="vote-emoji">🤢</span>
+                        <span class="vote-label">Poor</span>
+                    </button>
+                </div>
+                <div id="messStats" class="stats-container">
+                    <div class="stat-item">
+                        <span class="stat-emoji">😋</span>
+                        <span class="stat-label">Good</span>
+                        <span class="stat-value" id="statGood">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-emoji">😐</span>
+                        <span class="stat-label">Average</span>
+                        <span class="stat-value" id="statAverage">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-emoji">🤢</span>
+                        <span class="stat-label">Poor</span>
+                        <span class="stat-value" id="statPoor">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- P2P -->
+        <div id="p2p" class="card">
+            <div class="card-header">
+                <div>
+                    <h3>🔗 P2P File Sharing</h3>
+                    <span class="subtitle">Decentralized Peer Nodes (Port 6000)</span>
+                </div>
+            </div>
+            <div class="file-section">
+                <div id="p2pFileList" class="file-list">Loading files...</div>
+                <div class="input-section">
+                    <div class="form-group">
+                        <label>Upload File</label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="p2pFileInput" class="file-input">
+                            <label for="p2pFileInput" class="file-label">
+                                <span>📁 Choose File</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="uploadP2PFile()">
+                            <span>⬆️ Upload File</span>
+                        </button>
+                        <button class="btn btn-outline" onclick="refreshP2PFiles()">
+                            <span>🔄 Refresh List</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

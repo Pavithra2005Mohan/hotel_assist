@@ -25,13 +25,23 @@ public class ComplaintServer {
             try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                  PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
                 
+                System.out.println("[Socket] Client connected from: " + socket.getRemoteSocketAddress());
+                
                 String input = in.readLine();
                 if (input != null) {
+                    System.out.println("[Socket] Received: " + input);
                     String response = ComplaintService.processComplaint(input);
                     out.println(response);
+                    System.out.println("[Socket] Sent response: " + response);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println("[Socket] Error handling client: " + e.getMessage());
+            } finally {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    // Ignore
+                }
             }
         }
     }
